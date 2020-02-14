@@ -1,0 +1,18 @@
+---
+log_level: INFO
+data:
+  batch_size: 64
+  dataset_dir: part0/
+  val_batch_size: 1
+  test_batch_size: 1
+  validation_ratio: 0.1
+  test_ratio: 0.2
+  graph_pkl_filename: input_files/adj_mat.pkl
+  hdf_filename: input_files/speed.h5
+  sensor_ids : input_files/graph_sensor_locations_11k.csv
+  graph_partitions: input_files/tiny_11k_graph_new.txt.part.64
+model:
+  horizon: 12
+  seq_len: 12
+
+
