@@ -21,10 +21,7 @@ from lib.utils import generate_seq2seq_data
 
 
 from model.dcrnn_model import DCRNNModel
-import nvidia_smi
 
-nvidia_smi.nvmlInit()
-handle = nvidia_smi.nvmlDeviceGetHandleByIndex(0)
 
 class DCRNNSupervisor(object):
     """
@@ -32,8 +29,7 @@ class DCRNNSupervisor(object):
     """
 
     def __init__(self, kwargs):
-        #nvidia_smi.nvmlInit()
-        #handle = nvidia_smi.nvmlDeviceGetHandleByIndex(0)
+        
 
         self._kwargs = kwargs
         self._data_kwargs = kwargs.get('data')
@@ -289,24 +285,6 @@ class DCRNNSupervisor(object):
         distance_df['to'] = distance_df['to'].astype('str')
         sensor_ids = part_df['sensor_id'].astype(str).values.tolist()
 
-        cdata = self._data[sensor_ids] # data required 
-        if num_nodes < self.max_node:
-            pad = self.max_node - num_nodes
-            solution = (['%i' %i for i in range(pad)])
-            d = dict.fromkeys(solution, 0)
-            cdata = cdata.assign(**d)
-
-        sp_train, sp_val = train_val_test_split(cdata, val_ratio=self.validation_ratio, test_ratio=self.test_ratio)
-        sp_scaler = StandardScaler(mean=sp_train.values.mean(), std=sp_train.values.std())
-        train_x, train_y = data_prep(df_in=[sp_train], df_out=[sp_train], 
-                        in_scaler=[sp_scaler], out_scaler=[sp_scaler], num_nodes=self.max_node)
-        data_train = generate_seq2seq_data(train_x, train_y, sp_train.shape[0], self.batch_size, self.seq_len, self.horizon, self.max_node, 'train')
-        
-        val_x, val_y = data_prep([sp_val], [sp_val], 
-                    in_scaler=[sp_scaler], out_scaler=[sp_scaler], num_nodes=self.max_node)
-        data_val = generate_seq2seq_data(val_x, val_y, sp_val.shape[0], self.val_batch_size, self.seq_len, self.horizon, self.max_node, 'val')
-        data_train.update(data_val)
-
         node_count = len(sensor_ids)       
         adj_mx = self.get_adjacency_matrix(distance_df, sensor_ids)
  
@@ -352,7 +330,6 @@ class DCRNNSupervisor(object):
         #sclusters = cluster_arr + setOfSix
 
         while self._epoch <= epochs:
-            res = nvidia_smi.nvmlDeviceGetUtilizationRates(handle)
             
             # Learning rate schedule.
             new_lr = max(min_learning_rate, base_lr * (lr_decay_ratio ** np.sum(self._epoch >= np.array(steps))))
