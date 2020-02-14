@@ -17,4 +17,4 @@ The script will generate a ```data/TFrecords/``` folder with the train, test, an
 
 python dcrnn_train.py --config_filename=data/dcrnn_config_32transfer.yaml
 ```
-The generated prediction of DCRNN is in ```data/results/```
+The generated prediction of TL-DCRNN will be in ```data/results/```
