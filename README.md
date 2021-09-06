@@ -1,4 +1,6 @@
 # TL-DCRNN: Transfer Learning with Graph Neural Networks for Short-Term Highway Traffic Forecasting
+TL-DCRN, a new transfer learning approach for DCRNN, where a single model trained on a highway network can be used to forecast traffic on unseen highway networks. Given a traffic network with a large amount of traffic data, our approach consists of partitioning the traffic network into a number of subgraphs and using a new training scheme that utilizes subgraphs to marginalize the location-specific information, thus learning the traffic as a function of network connectivity and temporal patterns alone. The resulting trained model can be used to forecast traffic on unseen networks. We demonstrate that TL-DCRN can learn from  San Francisco regional traffic data and can forecast traffic on the Los Angeles region and vice versa.
+
 
 ## Requirements
 - scipy>=0.19.0
